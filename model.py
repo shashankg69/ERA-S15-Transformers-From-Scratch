@@ -76,4 +76,22 @@ class ResidualConnection(nn.Module):
 
     def forward(self, x, sublayer):
         return x + self.dropout(sublayer(self.norm(x)))
+    
+
+class MultiHeadAttentionBlock(nn.Module):
+    
+    def __init__(self, d_model:int, h: int, dropout: float) -> None:
+        super().__init__()
+
+        self.d_model = d_model
+        self.h = h
+
+        assert d_model % h == 0, "d_model is'nt divisible by h"
+
+        self.d_k = d_model // h
+        self.w_q = nn.Linear(d_model, d_model, bias= False)
+        self.w_k = nn.Linear(d_model, d_model, bias = False)
+        self.w_v = nn.Linear(d_model, d_model, bias = False)
+        self.w_o = nn.Linear(d_model, d_model, bias= False)
+        self.dropout = nn.Dropout(dropout)
      
