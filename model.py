@@ -66,4 +66,14 @@ class PositionalEncoding(nn.Module):
     # 'x' here is the word coming in #
         x = x + (self.pe[:, :x.shape[1], :]).requires_grad_(False)
         return self.dropout(x)
+    
+class ResidualConnection(nn.Module):
+
+    def __init__(self, dropout: float) -> None:
+        super.__init__()
+        self.dropout = nn.Dropout(dropout)
+        self.norm = LayerNormalization()
+
+    def forward(self, x, sublayer):
+        return x + self.dropout(sublayer(self.norm(x)))
      
